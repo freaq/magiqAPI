@@ -10,6 +10,10 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Query;
+using DbExtensions;
+
 
 namespace Qupid.Controllers
 {
@@ -17,55 +21,52 @@ namespace Qupid.Controllers
     public class QupidController : Controller
     {
         [HttpGet]
-        public IQueryable<string> GetAll()
+        public IActionResult GetAll()
         {
             ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
             RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
             ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
 
-
-            //DataContext dataContext = new DataContext(apiConfiguration.ConnectionString);
-
-
-            using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
+            // construct the SQL query
+            string from = "";
+            if (!String.IsNullOrEmpty(route.Schema))
             {
-                string from = "";
-                if (!String.IsNullOrEmpty(route.Schema))
-                {
-                    from += route.Schema + ".";
-                }
-
-                from += route.Table;
-
-
-                string sql = "use " + apiConfiguration.DatabaseName + " "
-                    + "select * from " + from;
-
-
-
-                sqlConnection.Open();
-
-                SqlCommand cmd = new SqlCommand(sql, sqlConnection);
-
-                List<string> lastNames = new List<string>();
-
-                DataTable dt = new DataTable();
-
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    string lastName = dr.GetString(6);
-
-                    lastNames.Add(lastName);
-                }
-
-                return lastNames.AsQueryable();
+                from += route.Schema + ".";
             }
 
-                
+            from += route.Table;
+
+            string databaseUseStatement = "USE " + apiConfiguration.DatabaseName + Environment.NewLine + Environment.NewLine;
+
+            SqlBuilder query = new SqlBuilder(databaseUseStatement).SELECT("*").FROM(from);
+
+            string sql = query.ToString();
 
 
-            //return new string[] { route.Id.ToString(), route.Name, route.Prefix, route.Table };
+
+            // run the SQL query
+            DataTable resultSetDataTable = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
+            {                   
+                sqlConnection.Open();
+
+                using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+                {
+                    using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                    {
+                        resultSetDataTable.Load(sqlDataReader);
+
+                        sqlDataReader.Close();
+                    }
+                }
+
+                sqlConnection.Close();
+            }
+
+
+
+            return new OkObjectResult(resultSetDataTable);
         }
 
         [HttpGet]
