@@ -1,0 +1,39 @@
+﻿{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "name": "DefaultRoute",
+  "prefix": "api",
+  "resource": null,
+  "schema": null,
+  "table": null,
+  "controller": "Qupid",
+  "actions": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "GetAll",
+      "httpMethod": "GET"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "Get",
+      "httpMethod": "GET",
+      "template": "/{id}"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "Post",
+      "httpMethod": "POST"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "Put",
+      "httpMethod": "PUT",
+      "template": "/{id}"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "Delete",
+      "httpMethod": "DELETE",
+      "template": "/{id}"
+    }
+  ]
+}

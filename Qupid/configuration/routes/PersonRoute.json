@@ -1,0 +1,7 @@
+﻿{
+  "id": "8321c247-b0b5-494b-81cb-34dfc38bf782",
+  "name": "PersonRoute",
+  "resource": "People",
+  "schema": "Person",
+  "table": "Person"
+}
