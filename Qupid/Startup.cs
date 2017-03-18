@@ -47,30 +47,31 @@ namespace Qupid
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            ConfigurationProvider configurationProvider = new ConfigurationProvider(_hostingEnvironment);
+            ConfigurationService configurationService = ConfigurationService.Instance;
 
+            configurationService.LoadConfiguration(hostingEnvironment.ContentRootPath);
 
             app.UseMvc(routes =>
             {
-                foreach (RouteConfiguration route in configurationProvider.Routes)
+                foreach (RouteConfiguration route in configurationService.Routes)
                 {
                     // set the route configuration prefix or use the default
                     string routePrefix = route.Prefix;
                     if (String.IsNullOrEmpty(routePrefix))
                     {
-                        routePrefix = configurationProvider.DefaultRoute.Prefix;
+                        routePrefix = configurationService.DefaultRoute.Prefix;
                     }
 
                     // set the route configuration controller or use the default
                     string routeController = route.Controller;
                     if (String.IsNullOrEmpty(routeController))
                     {
-                        routeController = configurationProvider.DefaultRoute.Controller;
+                        routeController = configurationService.DefaultRoute.Controller;
                     }
 
                     // set the route configuration actions or use the default actions
@@ -81,7 +82,7 @@ namespace Qupid
                     }
                     else
                     {
-                        routeActionConfigurations = configurationProvider.DefaultRoute.Actions;
+                        routeActionConfigurations = configurationService.DefaultRoute.Actions;
                     }
 
                     foreach (ActionConfiguration action in routeActionConfigurations)
@@ -103,7 +104,7 @@ namespace Qupid
                         }
                         object defaults = new { controller = routeController, action = action.Name };
                         object constraints = null;
-                        object dataTokens = new { apiConfiguration = configurationProvider.ApiConfiguration, routeConfiguration = route, actionConfiguration = action };
+                        object dataTokens = new { apiConfiguration = configurationService.ApiConfiguration, routeConfiguration = route, actionConfiguration = action };
 
                         routes.MapRoute(
                             name: name,

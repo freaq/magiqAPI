@@ -28,6 +28,25 @@ namespace Qupid.Controllers
             ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
 
             // construct the SQL query
+            string databaseUseStatement = "USE " + apiConfiguration.DatabaseName + Environment.NewLine + Environment.NewLine;
+
+            SqlBuilder query = new SqlBuilder(databaseUseStatement);
+
+            if (route.Columns.Any())
+            {
+                List<string> columnNames = new List<string>();
+                foreach(ColumnConfiguration column in route.Columns)
+                {
+                    columnNames.Add(column.ColumnName);
+                }
+
+                query.SELECT(string.Join(",", columnNames));
+            }
+            else
+            {
+                query.SELECT("*");
+            }
+
             string from = "";
             if (!String.IsNullOrEmpty(route.Schema))
             {
@@ -36,17 +55,18 @@ namespace Qupid.Controllers
 
             from += route.Table;
 
-            string databaseUseStatement = "USE " + apiConfiguration.DatabaseName + Environment.NewLine + Environment.NewLine;
+            query.FROM(from);
 
-            SqlBuilder query = new SqlBuilder(databaseUseStatement).SELECT("*").FROM(from);
+            
+            
 
             string sql = query.ToString();
 
 
 
             // run the SQL query
-            DataTable resultSetDataTable = new DataTable();
-
+            DataTable resultSetDataTable = new DataTable();            
+            
             using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
             {                   
                 sqlConnection.Open();
@@ -55,7 +75,32 @@ namespace Qupid.Controllers
                 {
                     using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
                     {
-                        resultSetDataTable.Load(sqlDataReader);
+                        if (route.Columns.Any())
+                        {                            
+                            foreach (ColumnConfiguration column in route.Columns)
+                            { 
+                                if (string.IsNullOrEmpty(column.PropertyName))
+                                {
+                                    column.PropertyName = column.ColumnName;
+                                }
+
+                                resultSetDataTable.Columns.Add(column.PropertyName);
+                            }
+                            
+                            while (sqlDataReader.Read())
+                            {
+                                DataRow row = resultSetDataTable.NewRow();
+                                foreach (ColumnConfiguration column in route.Columns)
+                                {   
+                                    row[column.PropertyName] = sqlDataReader.GetValue(column.ColumnName);
+                                }
+                                resultSetDataTable.Rows.Add(row);
+                            }
+                        }
+                        else
+                        {
+                            resultSetDataTable.Load(sqlDataReader);
+                        }
 
                         sqlDataReader.Close();
                     }
@@ -63,10 +108,9 @@ namespace Qupid.Controllers
 
                 sqlConnection.Close();
             }
-
-
-
+            
             return new OkObjectResult(resultSetDataTable);
+
         }
 
         [HttpGet]

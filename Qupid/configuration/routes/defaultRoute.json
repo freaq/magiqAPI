@@ -5,6 +5,7 @@
   "resource": null,
   "schema": null,
   "table": null,
+  "columns": null,
   "controller": "Qupid",
   "actions": [
     {

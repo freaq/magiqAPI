@@ -3,5 +3,14 @@
   "name": "PersonRoute",
   "resource": "People",
   "schema": "Person",
-  "table": "Person"
+  "table": "Person",
+  "columns": [
+    {
+      "columnName": "FirstName"
+    },
+    {
+      "columnName": "LastName",
+      "propertyName": "ApiLastName"
+    }
+  ]
 }

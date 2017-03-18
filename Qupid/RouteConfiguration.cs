@@ -13,13 +13,15 @@ namespace Qupid
 
         public string Prefix { get; set; }
 
+        public string Controller { get; set; }
+
         public string Resource { get; set; }
 
         public string Schema { get; set; }
 
         public string Table { get; set; }
 
-        public string Controller { get; set; }
+        public readonly List<ColumnConfiguration> Columns = new List<ColumnConfiguration>();
 
         public readonly List<ActionConfiguration> Actions = new List<ActionConfiguration>();
 
