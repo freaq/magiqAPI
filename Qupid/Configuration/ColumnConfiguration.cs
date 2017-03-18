@@ -1,4 +1,4 @@
-﻿namespace Qupid
+﻿namespace Qupid.Configuration
 {
     public class ColumnConfiguration
     {

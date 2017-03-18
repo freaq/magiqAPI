@@ -1,0 +1,58 @@
+﻿using Newtonsoft.Json;
+using Qupid.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Qupid
+{
+    public class DatabaseAnalyzer
+    {
+        public DatabaseAnalyzer()
+        {
+
+        }
+
+        public void ExtractConfigurationFromDatabase()
+        {
+            ConfigurationService configurationService = ConfigurationService.Instance;
+
+            using (SqlConnection sqlConnection = new SqlConnection(configurationService.ApiConfiguration.ConnectionString))
+            {
+                sqlConnection.Open();
+                                
+                DataTable tableSchemas = sqlConnection.GetSchema("Tables");                
+                foreach (DataRow row in tableSchemas.Rows)
+                {
+                    string schema = row[1].ToString();
+                    string table = row[2].ToString();
+
+                    RouteConfiguration routeConfiguration = new RouteConfiguration()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = table + "Route",
+                        Resource = table,
+                        Schema = schema,
+                        Table = table
+                    };
+
+                    string json = JsonConvert.SerializeObject(routeConfiguration);
+
+                    string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, routeConfiguration.Resource);
+
+                    File.WriteAllText(routeConfigurationFilePath, json);
+
+
+
+                }
+                
+
+                sqlConnection.Close();
+            }
+        }
+    }
+}

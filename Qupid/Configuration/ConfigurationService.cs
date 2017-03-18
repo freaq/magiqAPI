@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Qupid
+namespace Qupid.Configuration
 {
     public class ConfigurationService
     {
@@ -41,6 +41,10 @@ namespace Qupid
         
         public string ServiceRootPath { get; private set; }
 
+        public string ApiConfigurationFilePath { get; private set; }
+
+        public string RoutesConfigurationDirectoryPath { get; private set; }
+
         public ApiConfiguration ApiConfiguration { get; private set; }
 
         public readonly List<RouteConfiguration> Routes = new List<RouteConfiguration>();
@@ -51,6 +55,8 @@ namespace Qupid
         public void LoadConfiguration(string serviceRootPath)
         {
             ServiceRootPath = serviceRootPath;
+            ApiConfigurationFilePath = Path.Combine(ServiceRootPath, API_CONFIGURATION_FILE_PATH);
+            RoutesConfigurationDirectoryPath = Path.Combine(ServiceRootPath, ROUTES_CONFIGURATION_DIRECTORY_PATH);
 
             LoadApiConfiguration();
 
@@ -59,9 +65,7 @@ namespace Qupid
 
         private void LoadApiConfiguration()
         {
-            string apiConfigurationPath = Path.Combine(ServiceRootPath, API_CONFIGURATION_FILE_PATH);
-
-            using (FileStream apiConfigurationFileStream = new FileStream(apiConfigurationPath, FileMode.Open))
+            using (FileStream apiConfigurationFileStream = new FileStream(ApiConfigurationFilePath, FileMode.Open))
             {
                 using (StreamReader streamReader = new StreamReader(apiConfigurationFileStream))
                 {
@@ -74,9 +78,7 @@ namespace Qupid
 
         private void LoadRouteConfiguration()
         {
-            string routeConfigurationsPath = Path.Combine(ServiceRootPath, ROUTES_CONFIGURATION_DIRECTORY_PATH);
-
-            List<string> routeConfigurationFilePaths = Directory.GetFiles(routeConfigurationsPath).ToList<string>();
+            List<string> routeConfigurationFilePaths = Directory.GetFiles(RoutesConfigurationDirectoryPath).ToList();
 
             foreach (string routeConfigurationFilePath in routeConfigurationFilePaths)
             {

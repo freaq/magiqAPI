@@ -13,7 +13,7 @@ using System.Linq;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Query;
 using DbExtensions;
-
+using Qupid.Configuration;
 
 namespace Qupid.Controllers
 {
@@ -28,9 +28,7 @@ namespace Qupid.Controllers
             ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
 
             // construct the SQL query
-            string databaseUseStatement = "USE " + apiConfiguration.DatabaseName + Environment.NewLine + Environment.NewLine;
-
-            SqlBuilder query = new SqlBuilder(databaseUseStatement);
+            SqlBuilder query = new SqlBuilder();
 
             if (route.Columns.Any())
             {
