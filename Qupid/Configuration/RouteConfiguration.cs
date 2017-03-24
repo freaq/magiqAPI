@@ -11,6 +11,8 @@ namespace Qupid.Configuration
 
         public string Name { get; set; }
 
+        public bool Enabled { get; set; } = true;
+
         public string Prefix { get; set; }
 
         public string Controller { get; set; }
@@ -22,6 +24,8 @@ namespace Qupid.Configuration
         public string Table { get; set; }
 
         public readonly List<ColumnConfiguration> Columns = new List<ColumnConfiguration>();
+
+        public string PrimaryKeyColumn { get; set; } = "Id";
 
         public readonly List<ActionConfiguration> Actions = new List<ActionConfiguration>();
 

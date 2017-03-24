@@ -27,94 +27,223 @@ namespace Qupid.Controllers
             RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
             ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
 
-            // construct the SQL query
-            SqlBuilder query = new SqlBuilder();
-
-            if (route.Columns.Any())
+            if (route.Enabled && action.Enabled)
             {
-                List<string> columnNames = new List<string>();
-                foreach(ColumnConfiguration column in route.Columns)
+                // construct the SQL query
+                SqlBuilder query = new SqlBuilder();
+
+                if (route.Columns.Any())
                 {
-                    columnNames.Add(column.ColumnName);
+                    foreach (ColumnConfiguration column in route.Columns)
+                    {
+                        query.SELECT(column.ColumnName);
+                    }
+                }
+                else
+                {
+                    query.SELECT("*");
                 }
 
-                query.SELECT(string.Join(",", columnNames));
+                string from = "";
+                if (!String.IsNullOrEmpty(route.Schema))
+                {
+                    from += route.Schema + ".";
+                }
+
+                from += route.Table;
+
+                query.FROM(from);
+
+
+
+
+                string sql = query.ToString();
+
+
+
+                // run the SQL query
+                DataTable resultSetDataTable = new DataTable();
+
+                using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+                    {
+                        using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                        {
+                            if (route.Columns.Any())
+                            {
+                                foreach (ColumnConfiguration column in route.Columns)
+                                {
+                                    if (string.IsNullOrEmpty(column.PropertyName))
+                                    {
+                                        column.PropertyName = column.ColumnName;
+                                    }
+
+                                    resultSetDataTable.Columns.Add(column.PropertyName);
+                                }
+
+                                while (sqlDataReader.Read())
+                                {
+                                    DataRow row = resultSetDataTable.NewRow();
+                                    foreach (ColumnConfiguration column in route.Columns)
+                                    {
+                                        row[column.PropertyName] = sqlDataReader.GetValue(column.ColumnName);
+                                    }
+                                    resultSetDataTable.Rows.Add(row);
+                                }
+                            }
+                            else
+                            {
+                                resultSetDataTable.Load(sqlDataReader);
+                            }
+
+                            sqlDataReader.Close();
+                        }
+                    }
+
+                    sqlConnection.Close();
+                }
+
+                return new OkObjectResult(resultSetDataTable);
             }
             else
             {
-                query.SELECT("*");
+                Response.StatusCode = 501;
+                return new ObjectResult(null);
             }
-
-            string from = "";
-            if (!String.IsNullOrEmpty(route.Schema))
-            {
-                from += route.Schema + ".";
-            }
-
-            from += route.Table;
-
-            query.FROM(from);
-
-            
-            
-
-            string sql = query.ToString();
-
-
-
-            // run the SQL query
-            DataTable resultSetDataTable = new DataTable();            
-            
-            using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
-            {                   
-                sqlConnection.Open();
-
-                using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
-                {
-                    using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-                    {
-                        if (route.Columns.Any())
-                        {                            
-                            foreach (ColumnConfiguration column in route.Columns)
-                            { 
-                                if (string.IsNullOrEmpty(column.PropertyName))
-                                {
-                                    column.PropertyName = column.ColumnName;
-                                }
-
-                                resultSetDataTable.Columns.Add(column.PropertyName);
-                            }
-                            
-                            while (sqlDataReader.Read())
-                            {
-                                DataRow row = resultSetDataTable.NewRow();
-                                foreach (ColumnConfiguration column in route.Columns)
-                                {   
-                                    row[column.PropertyName] = sqlDataReader.GetValue(column.ColumnName);
-                                }
-                                resultSetDataTable.Rows.Add(row);
-                            }
-                        }
-                        else
-                        {
-                            resultSetDataTable.Load(sqlDataReader);
-                        }
-
-                        sqlDataReader.Close();
-                    }
-                }
-
-                sqlConnection.Close();
-            }
-            
-            return new OkObjectResult(resultSetDataTable);
 
         }
 
         [HttpGet]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
+            RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
+            ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
+
+            if (route.Enabled && action.Enabled)
+            {
+                // construct the SQL query
+                SqlBuilder query = new SqlBuilder();
+
+                if (route.Columns.Any())
+                {                    
+                    foreach (ColumnConfiguration column in route.Columns)
+                    {                        
+                        query.SELECT(column.ColumnName);
+                    }
+                }
+                else
+                {
+                    query.SELECT("*");
+                }
+
+                string from = "";
+                if (!String.IsNullOrEmpty(route.Schema))
+                {
+                    from += route.Schema + ".";
+                }
+
+                from += route.Table;
+
+                query.FROM(from);
+
+                using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    string[] restrictionsColumns = new string[4];
+                    restrictionsColumns[2] = route.Table;
+                    restrictionsColumns[3] = route.PrimaryKeyColumn;
+                    DataTable schemaColumns = sqlConnection.GetSchema("Columns", restrictionsColumns);
+
+                    string columnDataType = schemaColumns.Rows[0]["DATA_TYPE"].ToString();
+
+                    if (columnDataType == "int")
+                    {
+                        query.WHERE(route.PrimaryKeyColumn + " = " + id);
+                    }
+                    else if (columnDataType == "nvarchar")
+                    {
+                        query.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+                    }
+
+                    sqlConnection.Close();
+                }
+
+                    
+
+
+
+
+                string sql = query.ToString();
+
+
+
+                // run the SQL query
+                DataTable resultSetDataTable = new DataTable();
+
+                using (SqlConnection sqlConnection = new SqlConnection(apiConfiguration.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+                    {
+                        using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                        {
+                            if (route.Columns.Any())
+                            {
+                                foreach (ColumnConfiguration column in route.Columns)
+                                {
+                                    if (string.IsNullOrEmpty(column.PropertyName))
+                                    {
+                                        column.PropertyName = column.ColumnName;
+                                    }
+
+                                    resultSetDataTable.Columns.Add(column.PropertyName);
+                                }
+
+                                if (sqlDataReader.HasRows)
+                                {
+                                    while (sqlDataReader.Read())
+                                    {
+                                        DataRow row = resultSetDataTable.NewRow();
+                                        foreach (ColumnConfiguration column in route.Columns)
+                                        {
+                                            row[column.PropertyName] = sqlDataReader.GetValue(column.ColumnName);
+                                        }
+                                        resultSetDataTable.Rows.Add(row);
+                                    }
+                                }                                
+                            }
+                            else
+                            {
+                                resultSetDataTable.Load(sqlDataReader);
+                            }
+
+                            sqlDataReader.Close();
+                        }
+                    }
+
+                    sqlConnection.Close();
+                }
+
+                if (resultSetDataTable.Rows.Count > 0)
+                {
+                    return new OkObjectResult(resultSetDataTable.Rows[0]);
+                }
+                else
+                {                    
+                    return new NotFoundObjectResult(null);
+                }
+            }
+            else
+            {
+                Response.StatusCode = 501;
+                return new ObjectResult(null);
+            }
         }
 
         [HttpPost]

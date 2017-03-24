@@ -1,1 +1,64 @@
-{"Columns":[],"Actions":[],"Id":"37f54795-bd8a-4d12-aed3-17f36326ce21","Name":"Person_jsonRoute","Prefix":null,"Controller":null,"Resource":"Person_json","Schema":"Person","Table":"Person_json"}
+{
+  "Columns": [
+    {
+      "ColumnName": "PersonID",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "PersonType",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "NameStyle",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "FirstName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "LastName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "EmailPromotion",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "rowguid",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "ModifiedDate",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "AdditionalContactInfo",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Demographics",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Suffix",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "MiddleName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Title",
+      "PropertyName": null
+    }
+  ],
+  "Actions": [],
+  "Id": "e9ace98d-e73a-4bf8-b742-a766a171c1d9",
+  "Name": "Person_jsonRoute",
+  "Prefix": null,
+  "Controller": null,
+  "Resource": "Person_json",
+  "Schema": "Person",
+  "Table": "Person_json"
+}

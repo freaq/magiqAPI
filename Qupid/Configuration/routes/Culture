@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"de1bfaa3-251c-4588-a9a0-a123b6ab9d55","Name":"CultureRoute","Prefix":null,"Controller":null,"Resource":"Culture","Schema":"Production","Table":"Culture"}
+{"Columns":[{"ColumnName":"CultureID","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"87fcb7b2-9c52-41aa-8511-77c96775f45c","Name":"CultureRoute","Prefix":null,"Controller":null,"Resource":"Culture","Schema":"Production","Table":"Culture"}

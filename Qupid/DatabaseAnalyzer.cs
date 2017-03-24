@@ -24,32 +24,48 @@ namespace Qupid
             using (SqlConnection sqlConnection = new SqlConnection(configurationService.ApiConfiguration.ConnectionString))
             {
                 sqlConnection.Open();
-                                
-                DataTable tableSchemas = sqlConnection.GetSchema("Tables");                
+
+                DataTable tableSchemas = sqlConnection.GetSchema("Tables");
                 foreach (DataRow row in tableSchemas.Rows)
                 {
                     string schema = row[1].ToString();
                     string table = row[2].ToString();
 
-                    RouteConfiguration routeConfiguration = new RouteConfiguration()
+                    string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table);
+
+                    // only write the route configuration file if it does not yet exist
+                    if (!File.Exists(routeConfigurationFilePath))
                     {
-                        Id = Guid.NewGuid(),
-                        Name = table + "Route",
-                        Resource = table,
-                        Schema = schema,
-                        Table = table
-                    };
+                        RouteConfiguration routeConfiguration = new RouteConfiguration()
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = table + "Route",
+                            Resource = table,
+                            Schema = schema,
+                            Table = table
+                        };
+                        
+                        string[] restrictionsColumns = new string[4];
+                        restrictionsColumns[2] = table;
+                        DataTable schemaColumns = sqlConnection.GetSchema("Columns", restrictionsColumns);
 
-                    string json = JsonConvert.SerializeObject(routeConfiguration);
+                        foreach (DataRow rowColumn in schemaColumns.Rows)
+                        {
+                            string columnName = rowColumn[3].ToString();
+                            ColumnConfiguration column = new ColumnConfiguration()
+                            {
+                                ColumnName = columnName
+                            };
 
-                    string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, routeConfiguration.Resource);
-
-                    File.WriteAllText(routeConfigurationFilePath, json);
-
-
-
+                            routeConfiguration.Columns.Add(column);
+                        }
+                        
+                        string json = JsonConvert.SerializeObject(routeConfiguration);
+                        
+                        File.WriteAllText(routeConfigurationFilePath, json);
+                    }
                 }
-                
+
 
                 sqlConnection.Close();
             }

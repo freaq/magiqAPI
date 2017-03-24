@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"f6c610be-913e-4314-8869-94a9e5eab4f0","Name":"ProductDocumentRoute","Prefix":null,"Controller":null,"Resource":"ProductDocument","Schema":"Production","Table":"ProductDocument"}
+{"Columns":[{"ColumnName":"ProductID","PropertyName":null},{"ColumnName":"DocumentNode","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"6bc79842-e796-4696-860b-201420076819","Name":"ProductDocumentRoute","Prefix":null,"Controller":null,"Resource":"ProductDocument","Schema":"Production","Table":"ProductDocument"}

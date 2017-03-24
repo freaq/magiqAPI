@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"7cc792ce-d6f4-467c-8492-e819d13aeb63","Name":"UnitMeasureRoute","Prefix":null,"Controller":null,"Resource":"UnitMeasure","Schema":"Production","Table":"UnitMeasure"}
+{"Columns":[{"ColumnName":"UnitMeasureCode","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"b914b242-eadd-4eb3-bea9-e56badbeed33","Name":"UnitMeasureRoute","Prefix":null,"Controller":null,"Resource":"UnitMeasure","Schema":"Production","Table":"UnitMeasure"}

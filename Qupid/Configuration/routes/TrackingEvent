@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"8dc300ee-9473-4ba3-88b0-6e5926b004b4","Name":"TrackingEventRoute","Prefix":null,"Controller":null,"Resource":"TrackingEvent","Schema":"Sales","Table":"TrackingEvent"}
+{"Columns":[{"ColumnName":"TrackingEventID","PropertyName":null},{"ColumnName":"EventName","PropertyName":null}],"Actions":[],"Id":"3812963d-e45c-4cdb-86d4-8d158b225332","Name":"TrackingEventRoute","Prefix":null,"Controller":null,"Resource":"TrackingEvent","Schema":"Sales","Table":"TrackingEvent"}

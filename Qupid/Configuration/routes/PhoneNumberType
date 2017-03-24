@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"202267de-ee9e-4fe1-b929-65afff3947b9","Name":"PhoneNumberTypeRoute","Prefix":null,"Controller":null,"Resource":"PhoneNumberType","Schema":"Person","Table":"PhoneNumberType"}
+{"Columns":[{"ColumnName":"PhoneNumberTypeID","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"4de8683f-dcd0-4ec3-aadb-0ed4fc3e2b11","Name":"PhoneNumberTypeRoute","Prefix":null,"Controller":null,"Resource":"PhoneNumberType","Schema":"Person","Table":"PhoneNumberType"}

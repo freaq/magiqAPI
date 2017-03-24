@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"5005fdce-c8bb-4a4c-a225-86eb41395ef4","Name":"ContactTypeRoute","Prefix":null,"Controller":null,"Resource":"ContactType","Schema":"Person","Table":"ContactType"}
+{"Columns":[{"ColumnName":"ContactTypeID","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"39615f62-5fac-44aa-92a0-0f1ba9985b2c","Name":"ContactTypeRoute","Prefix":null,"Controller":null,"Resource":"ContactType","Schema":"Person","Table":"ContactType"}

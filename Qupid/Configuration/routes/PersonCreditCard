@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"ca31de20-79c4-4f55-806a-b00be2ecdd30","Name":"PersonCreditCardRoute","Prefix":null,"Controller":null,"Resource":"PersonCreditCard","Schema":"Sales","Table":"PersonCreditCard"}
+{"Columns":[{"ColumnName":"BusinessEntityID","PropertyName":null},{"ColumnName":"CreditCardID","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"885c6dd9-5def-408f-beb1-9fe911d107b2","Name":"PersonCreditCardRoute","Prefix":null,"Controller":null,"Resource":"PersonCreditCard","Schema":"Sales","Table":"PersonCreditCard"}

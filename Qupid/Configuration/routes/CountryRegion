@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"890909ca-2c5f-4323-8a2f-9f7bbe95b606","Name":"CountryRegionRoute","Prefix":null,"Controller":null,"Resource":"CountryRegion","Schema":"Person","Table":"CountryRegion"}
+{"Columns":[{"ColumnName":"CountryRegionCode","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"f6d0e43d-feaf-4aba-a8af-14c3b7ab69a8","Name":"CountryRegionRoute","Prefix":null,"Controller":null,"Resource":"CountryRegion","Schema":"Person","Table":"CountryRegion"}

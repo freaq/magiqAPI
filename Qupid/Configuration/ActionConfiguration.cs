@@ -11,6 +11,8 @@ namespace Qupid.Configuration
 
         public string Name { get; set; }
 
+        public bool Enabled { get; set; } = true;
+
         public string Template { get; set; }
 
         public ActionConfiguration()

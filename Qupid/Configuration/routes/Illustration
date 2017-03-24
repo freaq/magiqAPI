@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"3d4c020d-11be-4424-b0c7-022a5d8b2398","Name":"IllustrationRoute","Prefix":null,"Controller":null,"Resource":"Illustration","Schema":"Production","Table":"Illustration"}
+{"Columns":[{"ColumnName":"IllustrationID","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null},{"ColumnName":"Diagram","PropertyName":null}],"Actions":[],"Id":"72e90d78-b8c6-4073-aa3a-98f3093c53fc","Name":"IllustrationRoute","Prefix":null,"Controller":null,"Resource":"Illustration","Schema":"Production","Table":"Illustration"}

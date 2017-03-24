@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"f75442c9-50d7-4751-b0f3-14513296f57f","Name":"SalesReasonRoute","Prefix":null,"Controller":null,"Resource":"SalesReason","Schema":"Sales","Table":"SalesReason"}
+{"Columns":[{"ColumnName":"SalesReasonID","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ReasonType","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"c2ae15f6-0aa1-49e2-8d91-bac48303ee02","Name":"SalesReasonRoute","Prefix":null,"Controller":null,"Resource":"SalesReason","Schema":"Sales","Table":"SalesReason"}

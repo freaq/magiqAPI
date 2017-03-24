@@ -1,1 +1,1 @@
-{"Columns":[],"Actions":[],"Id":"92de2016-4b6c-4d99-affc-aa6e449e1d60","Name":"BusinessEntityRoute","Prefix":null,"Controller":null,"Resource":"BusinessEntity","Schema":"Person","Table":"BusinessEntity"}
+{"Columns":[{"ColumnName":"BusinessEntityID","PropertyName":null},{"ColumnName":"rowguid","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"07ea623d-9725-41b2-aeeb-b1a2674e8f55","Name":"BusinessEntityRoute","Prefix":null,"Controller":null,"Resource":"BusinessEntity","Schema":"Person","Table":"BusinessEntity"}

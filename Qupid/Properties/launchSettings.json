@@ -19,7 +19,7 @@
     "Qupid": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/people",
+      "launchUrl": "api/people/1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

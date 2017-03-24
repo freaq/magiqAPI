@@ -1,1 +1,65 @@
-{"Columns":[],"Actions":[],"Id":"3ed99ffa-524f-41f9-8b3d-1ed50b77e1d0","Name":"PersonRoute","Prefix":null,"Controller":null,"Resource":"Person","Schema":"Person","Table":"Person"}
+{
+  "Columns": [
+    {
+      "ColumnName": "BusinessEntityID",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "PersonType",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "NameStyle",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "FirstName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "LastName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "EmailPromotion",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "rowguid",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "ModifiedDate",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "AdditionalContactInfo",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Demographics",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Suffix",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "MiddleName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Title",
+      "PropertyName": null
+    }
+  ],
+  "Actions": [],
+  "Id": "f50b0289-df90-4dd3-898e-a2a467c3ab2a",
+  "Name": "PersonRoute",
+  "Prefix": null,
+  "Controller": null,
+  "Resource": "People",
+  "Schema": "Person",
+  "Table": "Person",
+  "PrimaryKeyColumn": "BusinessEntityID"
+}
