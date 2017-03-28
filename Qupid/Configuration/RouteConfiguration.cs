@@ -27,6 +27,8 @@ namespace Qupid.Configuration
 
         public string PrimaryKeyColumn { get; set; } = "Id";
 
+        public string PrimaryKeyColumnDataType { get; set; }
+
         public readonly List<ActionConfiguration> Actions = new List<ActionConfiguration>();
 
         public RouteConfiguration()

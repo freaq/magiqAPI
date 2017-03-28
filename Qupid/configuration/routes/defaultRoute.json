@@ -8,7 +8,7 @@
   "table": null,
   "columns": null,
   "primaryKeyColumn": "Id",
-  "controller": "Qupid",
+  "controller": "Default",
   "actions": [
     {
       "id": "00000000-0000-0000-0000-000000000000",
