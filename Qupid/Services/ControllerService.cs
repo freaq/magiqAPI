@@ -4,7 +4,6 @@ using Qupid.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Qupid.Services
 {
@@ -55,22 +54,44 @@ namespace Qupid.Services
             foreach (KeyValuePair<string, object> jsonProperty in jsonDictionary)
             {
                 columnNames.Add(jsonProperty.Key);
-                columnValues.Add(jsonProperty.Value);
+
+                if (jsonProperty.Value is string)
+                {
+                    columnValues.Add("'" + jsonProperty.Value + "'");
+                }
+                else if (jsonProperty.Value is int)
+                {
+                    columnValues.Add(jsonProperty.Value);
+                }
             }
-
-
-            //         var insert = SQL
-            //.INSERT_INTO("Products(ProductName, UnitPrice, CategoryID)")
-            //.VALUES("Chai", 15.56, 5);
-
-
 
             string columnParameters = String.Join(",", columnNames);
             object[] valueParameters = columnValues.ToArray();
 
-            sqlBuilder.INSERT_INTO(route.Table + "(" + columnParameters + ")").VALUES("bla", 123);
+            string into = GetSchemaTableName(route);
+
+            sqlBuilder.INSERT_INTO(into + "(" + columnParameters + ")");
 
             sqlBuilder.VALUES(valueParameters);
+
+            sqlQuery = sqlBuilder.ToString();
+
+            sqlQuery = string.Format(sqlQuery, valueParameters);
+
+            return sqlQuery;
+        }
+
+        public static string GetDefaultDeleteQuery(RouteConfiguration route, int id)
+        {
+            string sqlQuery;
+
+            SqlBuilder sqlBuilder = new SqlBuilder();
+
+            string deleteFrom = GetSchemaTableName(route);
+
+            sqlBuilder.DELETE_FROM(deleteFrom);
+
+            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
 
             sqlQuery = sqlBuilder.ToString();
 
@@ -99,19 +120,27 @@ namespace Qupid.Services
 
         private static SqlBuilder AddFROMQuery(SqlBuilder sqlBuilder, RouteConfiguration route)
         {
+            string from = GetSchemaTableName(route);
+            return sqlBuilder.FROM(from);
+        }
+
+        private static string GetSchemaTableName(RouteConfiguration route)
+        {
+            string schemaTableName;
+
             // if a table schema is configured
-            // then select from 'schema.table'
-            // else select from 'table'
+            // then use 'schema.table'
+            // else use 'table'
             if (!String.IsNullOrEmpty(route.Schema))
             {
-                sqlBuilder.FROM(route.Schema + "." + route.Table);
+                schemaTableName = route.Schema + "." + route.Table;
             }
             else
             {
-                sqlBuilder.FROM(route.Table);
+                schemaTableName = route.Table;
             }
 
-            return sqlBuilder;
+            return schemaTableName;
         }
 
     }

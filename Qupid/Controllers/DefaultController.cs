@@ -37,7 +37,7 @@ namespace Qupid.Controllers
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
-                DataTable resultSetDataTable = sqlServerService.ExecuteQuery(sqlQuery);
+                DataTable resultSetDataTable = sqlServerService.ExecuteResultQuery(sqlQuery);
 
                 return new OkObjectResult(resultSetDataTable);
             }
@@ -61,7 +61,7 @@ namespace Qupid.Controllers
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
-                DataTable resultSetDataTable = sqlServerService.ExecuteQuery(sqlQuery);
+                DataTable resultSetDataTable = sqlServerService.ExecuteResultQuery(sqlQuery);
 
                 if (resultSetDataTable.Rows.Count > 0)
                 {
@@ -94,14 +94,11 @@ namespace Qupid.Controllers
                     json = streamReader.ReadToEnd();
                 }
 
-
-
                 string sqlQuery = ControllerService.GetDefaultPostQuery(route, json);
 
-                //SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
+                SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
-                ////DataTable resultSetDataTable = sqlServerService.ExecuteQuery(sqlQuery);
-
+                sqlServerService.ExecuteNonQuery(sqlQuery);
             }
         }
 
@@ -118,10 +115,18 @@ namespace Qupid.Controllers
         [HttpDelete]
         public void Delete(int id)
         {
-            //         var delete = SQL
-            //.DELETE_FROM("Products")
-            //.WHERE("ProductID = {0}", 1)
-            //.LIMIT(1);
+            ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
+            RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
+            ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
+
+            if (route.Enabled && action.Enabled)
+            {
+                string sqlQuery = ControllerService.GetDefaultDeleteQuery(route, id);
+
+                SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
+
+                sqlServerService.ExecuteNonQuery(sqlQuery);
+            }
         }
     }
 }

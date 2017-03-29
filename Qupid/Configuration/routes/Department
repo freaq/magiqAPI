@@ -1,1 +1,29 @@
-{"Columns":[{"ColumnName":"DepartmentID","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"GroupName","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"e4bd5dfc-f386-429f-8bcc-4c271a25a153","Name":"DepartmentRoute","Prefix":null,"Controller":null,"Resource":"Department","Schema":"HumanResources","Table":"Department"}
+{
+  "Columns": [
+    {
+      "ColumnName": "DepartmentID",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "Name",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "GroupName",
+      "PropertyName": null
+    },
+    {
+      "ColumnName": "ModifiedDate",
+      "PropertyName": null
+    }
+  ],
+  "Actions": [],
+  "Id": "e4bd5dfc-f386-429f-8bcc-4c271a25a153",
+  "Name": "DepartmentRoute",
+  "Prefix": null,
+  "Controller": null,
+  "Resource": "Department",
+  "Schema": "HumanResources",
+  "Table": "Department",
+  "PrimaryKeyColumn": "DepartmentID"
+}

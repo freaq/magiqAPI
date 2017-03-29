@@ -30,7 +30,7 @@ namespace Qupid.Services
             Route = route;
         }
 
-        public DataTable ExecuteQuery(string sqlQuery)
+        public DataTable ExecuteResultQuery(string sqlQuery)
         {
             DataTable resultSetDataTable = new DataTable();
 
@@ -75,6 +75,21 @@ namespace Qupid.Services
             }
 
             return resultSetDataTable;
+        }
+
+        public void ExecuteNonQuery(string sqlQuery)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+
+                using (SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection))
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+
+                sqlConnection.Close();
+            }
         }
 
         //public DataTable GetColumnSchema(string columnName)
