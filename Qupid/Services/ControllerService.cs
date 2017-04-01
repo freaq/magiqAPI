@@ -81,6 +81,54 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
+        public static string GetDefaultPutQuery(RouteConfiguration route, int id, string json)
+        {
+            string sqlQuery;
+
+            SqlBuilder sqlBuilder = new SqlBuilder();
+
+            Dictionary<string, object> jsonDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            List<string> columnNames = new List<string>();
+            List<object> columnValues = new List<object>();
+            List<string> setParameters = new List<string>();
+            int index = 0;
+            foreach (KeyValuePair<string, object> jsonProperty in jsonDictionary)
+            {
+                columnNames.Add(jsonProperty.Key);
+
+                setParameters.Add(jsonProperty.Key + " = {" + index + "}");
+
+                if (jsonProperty.Value is string)
+                {
+                    columnValues.Add("'" + jsonProperty.Value + "'");
+                }
+                else if (jsonProperty.Value is int)
+                {
+                    columnValues.Add(jsonProperty.Value);
+                }
+
+                index++;
+            }
+
+            string setParameter = String.Join(",", setParameters);
+            object[] valueParameters = columnValues.ToArray();
+            
+            string updateFrom = GetSchemaTableName(route);
+
+            sqlBuilder.UPDATE(updateFrom);
+
+            sqlBuilder.SET(setParameter);
+
+            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+
+            sqlQuery = sqlBuilder.ToString();
+
+            sqlQuery = string.Format(sqlQuery, valueParameters);
+
+            return sqlQuery;
+        }
+
         public static string GetDefaultDeleteQuery(RouteConfiguration route, int id)
         {
             string sqlQuery;
@@ -142,6 +190,5 @@ namespace Qupid.Services
 
             return schemaTableName;
         }
-
     }
 }

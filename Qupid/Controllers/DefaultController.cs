@@ -103,13 +103,26 @@ namespace Qupid.Controllers
         }
 
         [HttpPut]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id)
         {
+            ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
+            RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
+            ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
 
-            //         var update = SQL
-            //.UPDATE("Products")
-            //.SET("Discontinued = {0}", true)
-            //.WHERE("ProductID = {0}", 1);
+            if (route.Enabled && action.Enabled)
+            {
+                string json;
+                using (StreamReader streamReader = new StreamReader(Request.Body))
+                {
+                    json = streamReader.ReadToEnd();
+                }
+
+                string sqlQuery = ControllerService.GetDefaultPutQuery(route, id, json);
+
+                SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
+
+                sqlServerService.ExecuteNonQuery(sqlQuery);
+            }
         }
 
         [HttpDelete]
