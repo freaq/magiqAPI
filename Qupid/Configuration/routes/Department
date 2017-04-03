@@ -25,5 +25,5 @@
   "Resource": "Department",
   "Schema": "HumanResources",
   "Table": "Department",
-  "PrimaryKeyColumn": "DepartmentID"
+  "PrimaryKeyColumn": "Name"
 }

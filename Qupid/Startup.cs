@@ -14,16 +14,7 @@ namespace Qupid
 {
     public class Startup
     {
-        List<string> tables = new List<string>()
-        {
-            "Person",
-            "Product"
-        };
-
-        string routePrefix = "api";
-
         private readonly IHostingEnvironment _hostingEnvironment;
-
 
 
         public Startup(IHostingEnvironment hostingEnvironment)

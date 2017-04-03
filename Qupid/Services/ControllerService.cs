@@ -24,7 +24,7 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
-        public static string GetDefaultGetQuery(RouteConfiguration route, int id)
+        public static string GetDefaultGetByIntQuery(RouteConfiguration route, int id)
         {
             string sqlQuery;
 
@@ -35,6 +35,23 @@ namespace Qupid.Services
             sqlBuilder = AddFROMQuery(sqlBuilder, route);
 
             sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+
+            sqlQuery = sqlBuilder.ToString();
+
+            return sqlQuery;
+        }
+
+        public static string GetDefaultGetByStringQuery(RouteConfiguration route, string id)
+        {
+            string sqlQuery;
+
+            SqlBuilder sqlBuilder = new SqlBuilder();
+
+            sqlBuilder = AddSELECTQuery(sqlBuilder, route);
+
+            sqlBuilder = AddFROMQuery(sqlBuilder, route);
+
+            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
 
             sqlQuery = sqlBuilder.ToString();
 

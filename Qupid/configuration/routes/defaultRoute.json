@@ -17,7 +17,13 @@
     },
     {
       "id": "00000000-0000-0000-0000-000000000000",
-      "name": "Get",
+      "name": "GetByInt",
+      "httpMethod": "GET",
+      "template": "/{id:int}"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "GetByString",
       "httpMethod": "GET",
       "template": "/{id}"
     },

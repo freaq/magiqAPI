@@ -49,7 +49,7 @@ namespace Qupid.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
+        public IActionResult GetByInt(int id)
         {
             ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
             RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
@@ -57,7 +57,38 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetDefaultGetQuery(route, id);
+                string sqlQuery = ControllerService.GetDefaultGetByIntQuery(route, id);
+
+                SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
+
+                DataTable resultSetDataTable = sqlServerService.ExecuteResultQuery(sqlQuery);
+
+                if (resultSetDataTable.Rows.Count > 0)
+                {
+                    return new OkObjectResult(resultSetDataTable.Rows[0]);
+                }
+                else
+                {
+                    return new NotFoundObjectResult(null);
+                }
+            }
+            else
+            {
+                Response.StatusCode = 501;
+                return new ObjectResult(null);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetByString(string id)
+        {
+            ApiConfiguration apiConfiguration = RouteData.DataTokens["apiConfiguration"] as ApiConfiguration;
+            RouteConfiguration route = RouteData.DataTokens["routeConfiguration"] as RouteConfiguration;
+            ActionConfiguration action = RouteData.DataTokens["actionConfiguration"] as ActionConfiguration;
+
+            if (route.Enabled && action.Enabled)
+            {
+                string sqlQuery = ControllerService.GetDefaultGetByStringQuery(route, id);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
