@@ -1,1 +1,14 @@
-{"Columns":[{"ColumnName":"BillOfMaterialsID","PropertyName":null},{"ColumnName":"ComponentID","PropertyName":null},{"ColumnName":"StartDate","PropertyName":null},{"ColumnName":"UnitMeasureCode","PropertyName":null},{"ColumnName":"BOMLevel","PropertyName":null},{"ColumnName":"PerAssemblyQty","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null},{"ColumnName":"EndDate","PropertyName":null},{"ColumnName":"ProductAssemblyID","PropertyName":null}],"Actions":[],"Id":"aac9d8d2-8273-4e1e-9fee-f1af9f2b4f44","Name":"BillOfMaterialsRoute","Prefix":null,"Controller":null,"Resource":"BillOfMaterials","Schema":"Production","Table":"BillOfMaterials"}
+{
+  "Columns": [],
+  "Actions": [],
+  "Id": "15996475-a9ba-422d-85e3-b7bbc8903d4e",
+  "Name": "BillOfMaterialsRoute",
+  "Enabled": true,
+  "Prefix": null,
+  "Controller": null,
+  "Resource": "BillOfMaterials",
+  "Schema": "Production",
+  "Table": "BillOfMaterials",
+  "PrimaryKeyColumn": "Id",
+  "PrimaryKeyColumnDataType": null
+}

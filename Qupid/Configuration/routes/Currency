@@ -1,1 +1,1 @@
-{"Columns":[{"ColumnName":"CurrencyCode","PropertyName":null},{"ColumnName":"Name","PropertyName":null},{"ColumnName":"ModifiedDate","PropertyName":null}],"Actions":[],"Id":"3741bcd4-e9b1-4400-aebd-698b0642b8c1","Name":"CurrencyRoute","Prefix":null,"Controller":null,"Resource":"Currency","Schema":"Sales","Table":"Currency"}
+{"Columns":[],"Actions":[],"Id":"8914066f-35b4-453c-ae3a-0e5a5de2865f","Name":"CurrencyRoute","Enabled":true,"Prefix":null,"Controller":null,"Resource":"Currency","Schema":"Sales","Table":"Currency","PrimaryKeyColumn":"Id","PrimaryKeyColumnDataType":null}

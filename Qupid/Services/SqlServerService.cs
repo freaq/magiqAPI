@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
+﻿using System.Linq;
 using System.Data.SqlClient;
-using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web.Http.OData;
-using System.Web.Http.OData.Query;
 using DbExtensions;
 using Qupid.Configuration;
-using Qupid.Services;
 
 namespace Qupid.Services
 {

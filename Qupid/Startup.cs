@@ -45,9 +45,9 @@ namespace Qupid
             loggerFactory.AddDebug();
 
             ConfigurationService configurationService = ConfigurationService.Instance;
-
+            
             configurationService.LoadConfiguration(hostingEnvironment.ContentRootPath);
-
+            
             if (configurationService.ApiConfiguration.ExtractConfigurationFromDatabase)
             {
                 DatabaseAnalyzer databaseAnalyzer = new DatabaseAnalyzer();

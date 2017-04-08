@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Qupid.Configuration;
+using Qupid.Services;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Qupid
 {
@@ -21,53 +17,38 @@ namespace Qupid
         {
             ConfigurationService configurationService = ConfigurationService.Instance;
 
-            using (SqlConnection sqlConnection = new SqlConnection(configurationService.ApiConfiguration.ConnectionString))
+            SqlServerSchema schema = new SqlServerSchema(configurationService.ApiConfiguration.ConnectionString);
+
+            foreach (SqlServerTable table in schema.Tables)
             {
-                sqlConnection.Open();
+                string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table.Name);
 
-                DataTable tableSchemas = sqlConnection.GetSchema("Tables");
-                foreach (DataRow row in tableSchemas.Rows)
+                // only write the route configuration file if it does not yet exist
+                if (!File.Exists(routeConfigurationFilePath))
                 {
-                    string schema = row[1].ToString();
-                    string table = row[2].ToString();
-
-                    string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table);
-
-                    // only write the route configuration file if it does not yet exist
-                    if (!File.Exists(routeConfigurationFilePath))
+                    RouteConfiguration routeConfiguration = new RouteConfiguration()
                     {
-                        RouteConfiguration routeConfiguration = new RouteConfiguration()
+                        Id = Guid.NewGuid(),
+                        Name = table.Name + "Route",
+                        Resource = table.Name,
+                        Schema = table.Schema,
+                        Table = table.Name
+                    };
+
+                    foreach (SqlServerColumn column in table.Columns)
+                    {
+                        ColumnConfiguration columnConfiguration = new ColumnConfiguration()
                         {
-                            Id = Guid.NewGuid(),
-                            Name = table + "Route",
-                            Resource = table,
-                            Schema = schema,
-                            Table = table
+                            ColumnName = column.Name
                         };
-                        
-                        string[] restrictionsColumns = new string[4];
-                        restrictionsColumns[2] = table;
-                        DataTable schemaColumns = sqlConnection.GetSchema("Columns", restrictionsColumns);
 
-                        foreach (DataRow rowColumn in schemaColumns.Rows)
-                        {
-                            string columnName = rowColumn[3].ToString();
-                            ColumnConfiguration column = new ColumnConfiguration()
-                            {
-                                ColumnName = columnName
-                            };
-
-                            routeConfiguration.Columns.Add(column);
-                        }
-                        
-                        string json = JsonConvert.SerializeObject(routeConfiguration);
-                        
-                        File.WriteAllText(routeConfigurationFilePath, json);
+                        routeConfiguration.Columns.Add(columnConfiguration);
                     }
+
+                    string json = JsonConvert.SerializeObject(routeConfiguration);
+
+                    File.WriteAllText(routeConfigurationFilePath, json);
                 }
-
-
-                sqlConnection.Close();
             }
         }
     }

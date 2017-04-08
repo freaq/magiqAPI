@@ -1,29 +1,14 @@
 {
-  "Columns": [
-    {
-      "ColumnName": "DepartmentID",
-      "PropertyName": null
-    },
-    {
-      "ColumnName": "Name",
-      "PropertyName": null
-    },
-    {
-      "ColumnName": "GroupName",
-      "PropertyName": null
-    },
-    {
-      "ColumnName": "ModifiedDate",
-      "PropertyName": null
-    }
-  ],
+  "Columns": [],
   "Actions": [],
-  "Id": "e4bd5dfc-f386-429f-8bcc-4c271a25a153",
+  "Id": "170e7faf-d46d-406e-9061-a96723f1b3e9",
   "Name": "DepartmentRoute",
+  "Enabled": true,
   "Prefix": null,
   "Controller": null,
   "Resource": "Department",
   "Schema": "HumanResources",
   "Table": "Department",
-  "PrimaryKeyColumn": "Name"
+  "PrimaryKeyColumn": "DepartmentId",
+  "PrimaryKeyColumnDataType": null
 }
