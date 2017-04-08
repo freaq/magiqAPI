@@ -11,7 +11,7 @@ namespace Qupid.Services
         public readonly string ConnectionString;
 
         public readonly RouteConfiguration Route;
-
+        
         public SqlServerService(string connectionString, RouteConfiguration route)
         {
             ConnectionString = connectionString;
@@ -54,6 +54,30 @@ namespace Qupid.Services
                         {
                             resultSetDataTable.Load(sqlDataReader);
                         }
+
+                        sqlDataReader.Close();
+                    }
+                }
+
+                sqlConnection.Close();
+            }
+
+            return resultSetDataTable;
+        }
+
+        public DataTable GenericExecuteResultQuery(string sqlQuery)
+        {
+            DataTable resultSetDataTable = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+
+                using (SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection))
+                {
+                    using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                    {
+                        resultSetDataTable.Load(sqlDataReader);
 
                         sqlDataReader.Close();
                     }

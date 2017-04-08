@@ -24,7 +24,7 @@ namespace Qupid
                 string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table.Name);
 
                 // only write the route configuration file if it does not yet exist
-                if (!File.Exists(routeConfigurationFilePath))
+                if (File.Exists(routeConfigurationFilePath))
                 {
                     RouteConfiguration routeConfiguration = new RouteConfiguration()
                     {
@@ -39,8 +39,16 @@ namespace Qupid
                     {
                         ColumnConfiguration columnConfiguration = new ColumnConfiguration()
                         {
-                            ColumnName = column.Name
+                            ColumnName = column.Name,
+                            IsPrimaryKey = column.IsPrimaryKey
                         };
+
+                        if (column.IsPrimaryKey)
+                        {
+                            routeConfiguration.PrimaryKeyColumn = column.Name;
+
+                            // TODO: get the column data type and set it
+                        }
 
                         routeConfiguration.Columns.Add(columnConfiguration);
                     }

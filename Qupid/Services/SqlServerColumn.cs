@@ -95,12 +95,20 @@ namespace Qupid.Services
         /// </summary>
         public readonly string CollationCatalog;
 
+        public string ConstraintName { get; set; }
+
+        public bool IsPrimaryKey { get; set; }
+
         public SqlServerTable Table { get; set; }
 
 
         public SqlServerColumn(DataRow dataRow)
         {
-            Table = new SqlServerTable(dataRow);
+            Catalog = dataRow["table_catalog"] as string;
+
+            Schema = dataRow["table_schema"] as string;
+
+            TableName = dataRow["table_name"] as string;
 
             Name = dataRow["column_name"] as string;
 
@@ -145,7 +153,7 @@ namespace Qupid.Services
             {
                 NumericPrecision = dataRow["numeric_precision"] as byte?;
             }
-            
+
             if (dataRow["numeric_precision_radix"] is DBNull)
             {
                 NumericPrecisionRadix = null;
@@ -172,7 +180,7 @@ namespace Qupid.Services
             {
                 DateTimePrecision = Convert.ToInt16(dataRow["datetime_precision"]);
             }
-            
+
             CharacterSetCatalog = dataRow["character_set_catalog"] as string;
 
             CharacterSetSchema = dataRow["character_set_schema"] as string;

@@ -6,6 +6,8 @@
 
         public string PropertyName { get; set; }
 
+        public bool IsPrimaryKey { get; set; }
+
         public ColumnConfiguration()
         {
 

@@ -25,7 +25,7 @@ namespace Qupid.Configuration
 
         public readonly List<ColumnConfiguration> Columns = new List<ColumnConfiguration>();
 
-        public string PrimaryKeyColumn { get; set; } = "Id";
+        public string PrimaryKeyColumn { get; set; }
 
         public string PrimaryKeyColumnDataType { get; set; }
 

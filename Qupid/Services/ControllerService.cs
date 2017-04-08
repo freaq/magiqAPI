@@ -3,12 +3,18 @@ using Newtonsoft.Json;
 using Qupid.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Qupid.Services
 {
     public class ControllerService
     {
+        //public static DataTable ApplyColumnMapping(DataTable)
+        //{
+
+        //}
+
         public static string GetDefaultGetAllQuery(RouteConfiguration route)
         {
             string sqlQuery;

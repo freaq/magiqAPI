@@ -29,6 +29,7 @@ namespace Qupid.Services
 
         public readonly string FullTableName;
 
+
         public SqlServerTable(DataRow dataRow)
         {
             Catalog = dataRow["table_catalog"] as string;
