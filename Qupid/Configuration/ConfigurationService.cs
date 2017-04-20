@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Qupid.Services;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -34,9 +32,6 @@ namespace Qupid.Configuration
 
         #endregion
 
-
-        private const string DEFAULT_ROUTE_CONFIGURATION_NAME = "DefaultRoute";
-
         private const string API_CONFIGURATION_FILE_PATH = "configuration/api.json";
 
         private const string ROUTES_CONFIGURATION_DIRECTORY_PATH = "configuration/routes";
@@ -48,11 +43,6 @@ namespace Qupid.Configuration
         public string RoutesConfigurationDirectoryPath { get; private set; }
 
         public ApiConfiguration ApiConfiguration { get; private set; }
-
-        public readonly List<RouteConfiguration> Routes = new List<RouteConfiguration>();
-
-        public RouteConfiguration DefaultRoute { get; private set; }
-
 
         public void LoadConfiguration(string serviceRootPath)
         {
@@ -92,26 +82,18 @@ namespace Qupid.Configuration
 
                         RouteConfiguration route = JsonConvert.DeserializeObject<RouteConfiguration>(json);
 
-                        // set the default route configuration
-                        if (route.Name == DEFAULT_ROUTE_CONFIGURATION_NAME)
+                        foreach (ColumnConfiguration column in route.Columns)
                         {
-                            DefaultRoute = route;
-                        }
-                        else
-                        {
-                            foreach (ColumnConfiguration column in route.Columns)
+                            // if no custom property name is configured
+                            // then use the table column name as the api property name                            
+                            if (String.IsNullOrEmpty(column.PropertyName))
                             {
-                                // if no custom property name is configured
-                                // then use the table column name as the api property name                            
-                                if (String.IsNullOrEmpty(column.PropertyName))
-                                {
-                                    column.PropertyName = column.ColumnName;
-                                }
+                                column.PropertyName = column.ColumnName;
                             }
-
-                            // add the custom route configuration to the list
-                            Routes.Add(route);
                         }
+
+                        // add the custom route configuration to the list
+                        ApiConfiguration.Routes.Add(route);
                     }
                 }
             }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Qupid.Configuration
 {
@@ -10,6 +7,10 @@ namespace Qupid.Configuration
         public string ConnectionString { get; set; }
 
         public bool ExtractConfigurationFromDatabase { get; set; }
+
+        public RouteConfiguration DefaultRoute { get; set; }
+
+        public List<RouteConfiguration> Routes = new List<RouteConfiguration>();
 
         public ApiConfiguration()
         {

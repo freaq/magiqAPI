@@ -1,8 +1,52 @@
-﻿{
-  // default configuration for routes such as prefix and database access
-
+﻿{  
   "connectionString": "Server=HOMEBASE\\SQLEXPRESS;Database=AdventureWorks2016CTP3;Integrated Security=true;",
-
-  "extractConfigurationFromDatabase": true
-
+  "extractConfigurationFromDatabase": true,
+  "defaultRoute": {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "DefaultRoute",
+    "enabled": true,
+    "prefix": "api",
+    "resource": null,
+    "schema": null,
+    "table": null,
+    "columns": null,
+    "primaryKeyColumn": "Id",
+    "controller": "Default",
+    "actions": [
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "GetAll",
+        "httpMethod": "GET"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "GetByInt",
+        "httpMethod": "GET",
+        "template": "/{id:int}"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "GetByString",
+        "httpMethod": "GET",
+        "template": "/{id}"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "Post",
+        "httpMethod": "POST"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "Put",
+        "httpMethod": "PUT",
+        "template": "/{id}"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "Delete",
+        "httpMethod": "DELETE",
+        "template": "/{id}"
+      }
+    ]
+  }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -45,10 +44,12 @@ namespace Qupid
             loggerFactory.AddDebug();
 
             ConfigurationService configurationService = ConfigurationService.Instance;
-            
+
             configurationService.LoadConfiguration(hostingEnvironment.ContentRootPath);
-            
-            if (configurationService.ApiConfiguration.ExtractConfigurationFromDatabase)
+
+            ApiConfiguration apiConfiguration = configurationService.ApiConfiguration;
+
+            if (apiConfiguration.ExtractConfigurationFromDatabase)
             {
                 DatabaseAnalyzer databaseAnalyzer = new DatabaseAnalyzer();
 
@@ -57,20 +58,20 @@ namespace Qupid
 
             app.UseMvc(routes =>
             {
-                foreach (RouteConfiguration route in configurationService.Routes)
+                foreach (RouteConfiguration route in apiConfiguration.Routes)
                 {
                     // set the route configuration prefix or use the default
                     string routePrefix = route.Prefix;
                     if (String.IsNullOrEmpty(routePrefix))
                     {
-                        routePrefix = configurationService.DefaultRoute.Prefix;
+                        routePrefix = apiConfiguration.DefaultRoute.Prefix;
                     }
 
                     // set the route configuration controller or use the default
                     string routeController = route.Controller;
                     if (String.IsNullOrEmpty(routeController))
                     {
-                        routeController = configurationService.DefaultRoute.Controller;
+                        routeController = apiConfiguration.DefaultRoute.Controller;
                     }
 
                     // set the route configuration actions or use the default actions
@@ -81,7 +82,7 @@ namespace Qupid
                     }
                     else
                     {
-                        routeActionConfigurations = configurationService.DefaultRoute.Actions;
+                        routeActionConfigurations = apiConfiguration.DefaultRoute.Actions;
                     }
 
                     foreach (ActionConfiguration action in routeActionConfigurations)
