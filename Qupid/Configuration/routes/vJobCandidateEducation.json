@@ -1,0 +1,80 @@
+{
+    "Columns": [
+        {
+            "ColumnName": "JobCandidateID",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Level",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.StartDate",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.EndDate",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Degree",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Major",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Minor",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.GPA",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.GPAScale",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.School",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Loc.CountryRegion",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Loc.State",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "Edu.Loc.City",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        }
+    ],
+    "Actions": [],
+    "Id": "65660e25-ab0e-44be-9a6c-fe34129eaeb2",
+    "Name": "vJobCandidateEducationRoute",
+    "Enabled": true,
+    "Prefix": null,
+    "Controller": null,
+    "Resource": "vJobCandidateEducation",
+    "Schema": "HumanResources",
+    "Table": "vJobCandidateEducation",
+    "PrimaryKeyColumn": null,
+    "PrimaryKeyColumnDataType": null
+}

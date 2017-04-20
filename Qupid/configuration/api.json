@@ -1,4 +1,4 @@
-﻿{  
+﻿{
   "connectionString": "Server=HOMEBASE\\SQLEXPRESS;Database=AdventureWorks2016CTP3;Integrated Security=true;",
   "extractConfigurationFromDatabase": true,
   "defaultRoute": {
@@ -11,6 +11,7 @@
     "table": null,
     "columns": null,
     "primaryKeyColumn": "Id",
+    "primaryKeyColumnDataType": "int",
     "controller": "Default",
     "actions": [
       {
@@ -37,13 +38,25 @@
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
-        "name": "Put",
+        "name": "PutByInt",
+        "httpMethod": "PUT",
+        "template": "/{id:int}"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "PutByString",
         "httpMethod": "PUT",
         "template": "/{id}"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
-        "name": "Delete",
+        "name": "DeleteByInt",
+        "httpMethod": "DELETE",
+        "template": "/{id:int}"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "DeleteByString",
         "httpMethod": "DELETE",
         "template": "/{id}"
       }

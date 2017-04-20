@@ -29,7 +29,7 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
-        public static string GetDefaultGetByIntQuery(RouteConfiguration route, int id)
+        public static string GetDefaultGetQuery(RouteConfiguration route, object id)
         {
             string sqlQuery;
 
@@ -39,24 +39,14 @@ namespace Qupid.Services
 
             sqlBuilder = AddFROMQuery(sqlBuilder, route);
 
-            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
-
-            sqlQuery = sqlBuilder.ToString();
-
-            return sqlQuery;
-        }
-
-        public static string GetDefaultGetByStringQuery(RouteConfiguration route, string id)
-        {
-            string sqlQuery;
-
-            SqlBuilder sqlBuilder = new SqlBuilder();
-
-            sqlBuilder = AddSELECTQuery(sqlBuilder, route);
-
-            sqlBuilder = AddFROMQuery(sqlBuilder, route);
-
-            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+            if (id is int)
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+            }
+            else
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+            }
 
             sqlQuery = sqlBuilder.ToString();
 
@@ -103,7 +93,7 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
-        public static string GetDefaultPutQuery(RouteConfiguration route, int id, string json)
+        public static string GetDefaultPutQuery(RouteConfiguration route, object id, string json)
         {
             string sqlQuery;
 
@@ -135,14 +125,21 @@ namespace Qupid.Services
 
             string setParameter = String.Join(",", setParameters);
             object[] valueParameters = columnValues.ToArray();
-            
+
             string updateFrom = GetSchemaTableName(route);
 
             sqlBuilder.UPDATE(updateFrom);
 
             sqlBuilder.SET(setParameter);
 
-            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+            if (id is int)
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+            }
+            else
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+            }
 
             sqlQuery = sqlBuilder.ToString();
 
@@ -151,7 +148,7 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
-        public static string GetDefaultDeleteQuery(RouteConfiguration route, int id)
+        public static string GetDefaultDeleteQuery(RouteConfiguration route, object id)
         {
             string sqlQuery;
 
@@ -161,7 +158,14 @@ namespace Qupid.Services
 
             sqlBuilder.DELETE_FROM(deleteFrom);
 
-            sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+            if (id is int)
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+            }
+            else
+            {
+                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+            }
 
             sqlQuery = sqlBuilder.ToString();
 

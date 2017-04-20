@@ -1,0 +1,35 @@
+{
+    "Columns": [
+        {
+            "ColumnName": "AddressTypeID",
+            "PropertyName": null,
+            "IsPrimaryKey": true
+        },
+        {
+            "ColumnName": "Name",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "rowguid",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        },
+        {
+            "ColumnName": "ModifiedDate",
+            "PropertyName": null,
+            "IsPrimaryKey": false
+        }
+    ],
+    "Actions": [],
+    "Id": "40ab592a-64bb-452b-adca-7f23f8bf473f",
+    "Name": "AddressTypeRoute",
+    "Enabled": true,
+    "Prefix": null,
+    "Controller": null,
+    "Resource": "AddressType",
+    "Schema": "Person",
+    "Table": "AddressType",
+    "PrimaryKeyColumn": "AddressTypeID",
+    "PrimaryKeyColumnDataType": "int"
+}

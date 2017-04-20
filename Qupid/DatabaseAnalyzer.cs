@@ -21,10 +21,10 @@ namespace Qupid
 
             foreach (SqlServerTable table in schema.Tables)
             {
-                string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table.Name);
+                string routeConfigurationFilePath = Path.Combine(configurationService.RoutesConfigurationDirectoryPath, table.Name + ".json");
 
                 // only write the route configuration file if it does not yet exist
-                if (File.Exists(routeConfigurationFilePath))
+                if (!File.Exists(routeConfigurationFilePath))
                 {
                     RouteConfiguration routeConfiguration = new RouteConfiguration()
                     {
@@ -46,8 +46,7 @@ namespace Qupid
                         if (column.IsPrimaryKey)
                         {
                             routeConfiguration.PrimaryKeyColumn = column.Name;
-
-                            // TODO: get the column data type and set it
+                            routeConfiguration.PrimaryKeyColumnDataType = column.DataType;
                         }
 
                         routeConfiguration.Columns.Add(columnConfiguration);
