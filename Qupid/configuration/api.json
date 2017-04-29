@@ -17,48 +17,56 @@
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "GetAll",
-        "httpMethod": "GET"
+        "httpMethod": "GET",
+        "query": "SELECT {$columnNames} FROM {$schemaTable}"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "GetByInt",
         "httpMethod": "GET",
-        "template": "/{id:int}"
+        "template": "/{id:int}",
+        "query": "SELECT {$columnNames} FROM {$schemaTable} WHERE {$primaryKeyColumn} = {$id}"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "GetByString",
         "httpMethod": "GET",
-        "template": "/{id}"
+        "template": "/{id}",
+        "query": "SELECT {$columnNames} FROM {$schemaTable} WHERE {$primaryKeyColumn} = '{$id}'"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "Post",
-        "httpMethod": "POST"
+        "httpMethod": "POST",
+        "query": "INSERT INTO {$schemaTable} ({$bodyColumnNames}) VALUES ({$bodyColumnValues})"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "PutByInt",
         "httpMethod": "PUT",
-        "template": "/{id:int}"
+        "template": "/{id:int}",
+        "query": "UPDATE {$schemaTable} SET {$bodyColumnNamesAndValues} WHERE {$primaryKeyColumn} = {$id}"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "PutByString",
         "httpMethod": "PUT",
-        "template": "/{id}"
+        "template": "/{id}",
+        "query": "UPDATE {$schemaTable} SET {$bodyColumnNamesAndValues} WHERE {$primaryKeyColumn} = '{$id}'"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "DeleteByInt",
         "httpMethod": "DELETE",
-        "template": "/{id:int}"
+        "template": "/{id:int}",
+        "query": "DELETE FROM {$schemaTable} WHERE {$primaryKeyColumn} = {$id}"
       },
       {
         "id": "00000000-0000-0000-0000-000000000000",
         "name": "DeleteByString",
         "httpMethod": "DELETE",
-        "template": "/{id}"
+        "template": "/{id}",
+        "query": "DELETE FROM {$schemaTable} WHERE {$primaryKeyColumn} = '{$id}'"
       }
     ]
   }

@@ -12,6 +12,8 @@ namespace Qupid.Configuration
 
         public string Template { get; set; }
 
+        public string Query { get; set; }
+
         public ActionConfiguration()
         {
 

@@ -19,7 +19,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetDefaultGetAllQuery(route);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -54,7 +54,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetDefaultGetQuery(route, id);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -91,7 +91,7 @@ namespace Qupid.Controllers
                     json = streamReader.ReadToEnd();
                 }
 
-                string sqlQuery = ControllerService.GetDefaultPostQuery(route, json);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, json);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -125,7 +125,7 @@ namespace Qupid.Controllers
                     json = streamReader.ReadToEnd();
                 }
 
-                string sqlQuery = ControllerService.GetDefaultPutQuery(route, id, json);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id, json);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -153,7 +153,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetDefaultDeleteQuery(route, id);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 

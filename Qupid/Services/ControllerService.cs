@@ -1,5 +1,4 @@
-﻿using DbExtensions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Qupid.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,91 +13,65 @@ namespace Qupid.Services
 
         //}
 
-        public static string GetDefaultGetAllQuery(RouteConfiguration route)
+        private const string SCHEMA_SYMBOL = "{$schema}";
+        private const string TABLE_SYMBOL = "{$table}";
+        private const string SCHEMA_TABLE_SYMBOL = "{$schemaTable}";
+        private const string COLUMN_NAMES_SYMBOL = "{$columnNames}";
+        private const string PRIMARY_KEY_COLUMN_SYMBOL = "{$primaryKeyColumn}";
+        private const string ID_SYMBOL = "{$id}";
+        private const string BODY_COLUMN_NAMES_SYMBOL = "{$bodyColumnNames}";
+        private const string BODY_COLUMN_VALUES_SYMBOL = "{$bodyColumnValues}";
+        private const string BODY_COLUMN_NAMES_AND_VALUES_SYMBOL = "{$bodyColumnNamesAndValues}";
+
+        public static string GetStringReplacedQuery(RouteConfiguration route, ActionConfiguration action, string json = null)
         {
-            string sqlQuery;
-
-            SqlBuilder sqlBuilder = new SqlBuilder();
-
-            sqlBuilder = AddSELECTQuery(sqlBuilder, route);
-
-            sqlBuilder = AddFROMQuery(sqlBuilder, route);
-
-            sqlQuery = sqlBuilder.ToString();
-
-            return sqlQuery;
-        }
-
-        public static string GetDefaultGetQuery(RouteConfiguration route, object id)
-        {
-            string sqlQuery;
-
-            SqlBuilder sqlBuilder = new SqlBuilder();
-
-            sqlBuilder = AddSELECTQuery(sqlBuilder, route);
-
-            sqlBuilder = AddFROMQuery(sqlBuilder, route);
-
-            if (id is int)
+            if (String.IsNullOrEmpty(action.Query))
             {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
+                throw new Exception("The action query is required.");
+            }
+
+            string sqlQuery = action.Query;
+
+            sqlQuery = sqlQuery.Replace(SCHEMA_SYMBOL, route.Schema);
+            sqlQuery = sqlQuery.Replace(TABLE_SYMBOL, route.Table);
+            sqlQuery = sqlQuery.Replace(SCHEMA_TABLE_SYMBOL, GetSchemaTableName(route));
+
+            List<string> selectString = new List<string>();
+            if (route.Columns.Any())
+            {
+                foreach (ColumnConfiguration column in route.Columns)
+                {
+                    selectString.Add(column.ColumnName);
+                }
             }
             else
             {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
+                selectString.Add("*");
             }
 
-            sqlQuery = sqlBuilder.ToString();
+            sqlQuery = sqlQuery.Replace(COLUMN_NAMES_SYMBOL, String.Join(",", selectString));
 
-            return sqlQuery;
-        }
+            sqlQuery = sqlQuery.Replace(PRIMARY_KEY_COLUMN_SYMBOL, route.PrimaryKeyColumn);
 
-        public static string GetDefaultPostQuery(RouteConfiguration route, string json)
-        {
-            string sqlQuery;
-
-            SqlBuilder sqlBuilder = new SqlBuilder();
-
-            Dictionary<string, object> jsonDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            List<string> columnNames = new List<string>();
-            List<object> columnValues = new List<object>();
-            foreach (KeyValuePair<string, object> jsonProperty in jsonDictionary)
+            if (!String.IsNullOrEmpty(json))
             {
-                columnNames.Add(jsonProperty.Key);
-
-                if (jsonProperty.Value is string)
-                {
-                    columnValues.Add("'" + jsonProperty.Value + "'");
-                }
-                else if (jsonProperty.Value is int)
-                {
-                    columnValues.Add(jsonProperty.Value);
-                }
+                sqlQuery = ReplaceBodyColumnNamesAndValues(sqlQuery, json);
             }
-
-            string columnParameters = String.Join(",", columnNames);
-            object[] valueParameters = columnValues.ToArray();
-
-            string into = GetSchemaTableName(route);
-
-            sqlBuilder.INSERT_INTO(into + "(" + columnParameters + ")");
-
-            sqlBuilder.VALUES(valueParameters);
-
-            sqlQuery = sqlBuilder.ToString();
-
-            sqlQuery = string.Format(sqlQuery, valueParameters);
 
             return sqlQuery;
         }
 
-        public static string GetDefaultPutQuery(RouteConfiguration route, object id, string json)
+        public static string GetStringReplacedQuery(RouteConfiguration route, ActionConfiguration action, object id, string json = null)
         {
-            string sqlQuery;
+            string sqlQuery = GetStringReplacedQuery(route, action, json);
 
-            SqlBuilder sqlBuilder = new SqlBuilder();
+            sqlQuery = sqlQuery.Replace(ID_SYMBOL, id.ToString());
 
+            return sqlQuery;
+        }
+
+        private static string ReplaceBodyColumnNamesAndValues(string sql, string json)
+        {
             Dictionary<string, object> jsonDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
             List<string> columnNames = new List<string>();
@@ -123,79 +96,17 @@ namespace Qupid.Services
                 index++;
             }
 
+            string columnParameters = String.Join(",", columnNames);
+            string valueParameterString = String.Join(",", columnValues);
             string setParameter = String.Join(",", setParameters);
-            object[] valueParameters = columnValues.ToArray();
+            object[] valueParameterArray = columnValues.ToArray();
+            setParameter = string.Format(setParameter, valueParameterArray);
 
-            string updateFrom = GetSchemaTableName(route);
+            string replacedSql = sql.Replace(BODY_COLUMN_NAMES_SYMBOL, columnParameters);
+            replacedSql = replacedSql.Replace(BODY_COLUMN_VALUES_SYMBOL, valueParameterString);
+            replacedSql = replacedSql.Replace(BODY_COLUMN_NAMES_AND_VALUES_SYMBOL, setParameter);
 
-            sqlBuilder.UPDATE(updateFrom);
-
-            sqlBuilder.SET(setParameter);
-
-            if (id is int)
-            {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
-            }
-            else
-            {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
-            }
-
-            sqlQuery = sqlBuilder.ToString();
-
-            sqlQuery = string.Format(sqlQuery, valueParameters);
-
-            return sqlQuery;
-        }
-
-        public static string GetDefaultDeleteQuery(RouteConfiguration route, object id)
-        {
-            string sqlQuery;
-
-            SqlBuilder sqlBuilder = new SqlBuilder();
-
-            string deleteFrom = GetSchemaTableName(route);
-
-            sqlBuilder.DELETE_FROM(deleteFrom);
-
-            if (id is int)
-            {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = " + id);
-            }
-            else
-            {
-                sqlBuilder.WHERE(route.PrimaryKeyColumn + " = '" + id + "'");
-            }
-
-            sqlQuery = sqlBuilder.ToString();
-
-            return sqlQuery;
-        }
-
-        private static SqlBuilder AddSELECTQuery(SqlBuilder sqlBuilder, RouteConfiguration route)
-        {
-            // if route columns are configured
-            // then only select those columns from the database
-            // else select all columns
-            if (route.Columns.Any())
-            {
-                foreach (ColumnConfiguration column in route.Columns)
-                {
-                    sqlBuilder.SELECT(column.ColumnName);
-                }
-            }
-            else
-            {
-                sqlBuilder.SELECT("*");
-            }
-
-            return sqlBuilder;
-        }
-
-        private static SqlBuilder AddFROMQuery(SqlBuilder sqlBuilder, RouteConfiguration route)
-        {
-            string from = GetSchemaTableName(route);
-            return sqlBuilder.FROM(from);
+            return replacedSql;
         }
 
         private static string GetSchemaTableName(RouteConfiguration route)
