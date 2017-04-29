@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Data;
 using DbExtensions;
 using Qupid.Configuration;
+using System;
 
 namespace Qupid.Services
 {
@@ -11,7 +12,7 @@ namespace Qupid.Services
         public readonly string ConnectionString;
 
         public readonly RouteConfiguration Route;
-        
+
         public SqlServerService(string connectionString, RouteConfiguration route)
         {
             ConnectionString = connectionString;
@@ -45,7 +46,10 @@ namespace Qupid.Services
                                 DataRow row = resultSetDataTable.NewRow();
                                 foreach (ColumnConfiguration column in Route.Columns)
                                 {
-                                    row[column.PropertyName] = sqlDataReader.GetValue(column.ColumnName);
+                                    if (ContainsColumn(sqlDataReader, column.ColumnName))
+                                    {
+                                        row[column.PropertyName] = sqlDataReader.GetValueOrNull(column.ColumnName);
+                                    }
                                 }
                                 resultSetDataTable.Rows.Add(row);
                             }
@@ -102,6 +106,22 @@ namespace Qupid.Services
 
                 sqlConnection.Close();
             }
+        }
+
+        private bool ContainsColumn(SqlDataReader sqlDataReader, string columnName)
+        {
+            bool containsColumn = false;
+
+            for (int i = 0; i < sqlDataReader.FieldCount; i++)
+            {
+                if (sqlDataReader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    containsColumn = true;
+                    i = sqlDataReader.FieldCount;
+                }
+            }
+
+            return containsColumn;
         }
 
         //public DataTable GetColumnSchema(string columnName)
