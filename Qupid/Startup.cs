@@ -54,6 +54,11 @@ namespace Qupid
                 DatabaseAnalyzer databaseAnalyzer = new DatabaseAnalyzer();
 
                 databaseAnalyzer.ExtractConfigurationFromDatabase();
+
+                // reload the configuration to include the newly created route configuration
+                configurationService.LoadConfiguration(hostingEnvironment.ContentRootPath);
+
+                apiConfiguration = configurationService.ApiConfiguration;
             }
 
             app.UseMvc(routes =>

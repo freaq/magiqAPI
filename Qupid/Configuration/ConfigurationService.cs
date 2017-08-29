@@ -70,6 +70,11 @@ namespace Qupid.Configuration
 
         private void LoadRouteConfiguration()
         {
+            if (!Directory.Exists(RoutesConfigurationDirectoryPath))
+            {
+                Directory.CreateDirectory(RoutesConfigurationDirectoryPath);
+            }
+
             List<string> routeConfigurationFilePaths = Directory.GetFiles(RoutesConfigurationDirectoryPath).ToList();
 
             foreach (string routeConfigurationFilePath in routeConfigurationFilePaths)
