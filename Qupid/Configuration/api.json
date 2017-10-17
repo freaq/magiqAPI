@@ -1,6 +1,8 @@
 ﻿{
   "connectionString": "Server=HOMEBASE\\SQLEXPRESS;Database=AdventureworksDW2016CTP3;Integrated Security=true;",
   "extractConfigurationFromDatabase": true,
+  "title": "Qupid API",
+  "description": "Describe your API",
   "defaultRoute": {
     "id": "00000000-0000-0000-0000-000000000000",
     "name": "DefaultRoute",

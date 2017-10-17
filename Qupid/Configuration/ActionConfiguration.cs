@@ -8,6 +8,8 @@ namespace Qupid.Configuration
 
         public string Name { get; set; }
 
+        public string HttpMethod { get; set; }
+
         public bool Enabled { get; set; } = true;
 
         public string Template { get; set; }
