@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Qupid.Configuration;
 using System;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace Qupid.Services
         private const string BODY_COLUMN_VALUES_SYMBOL = "{$bodyColumnValues}";
         private const string BODY_COLUMN_NAMES_AND_VALUES_SYMBOL = "{$bodyColumnNamesAndValues}";
 
-        public static string GetStringReplacedQuery(RouteConfiguration route, ActionConfiguration action, string json = null)
+        public static string GetStringReplacedQuery(HttpRequest request, RouteConfiguration route, ActionConfiguration action, string json = null)
         {
             if (String.IsNullOrEmpty(action.Query))
             {
@@ -36,17 +38,52 @@ namespace Qupid.Services
             sqlQuery = sqlQuery.Replace(TABLE_SYMBOL, route.Table);
             sqlQuery = sqlQuery.Replace(SCHEMA_TABLE_SYMBOL, GetSchemaTableName(route));
 
+            // extract OData query information
+            List<string> odataSelectColumns = new List<string>();
+            foreach (KeyValuePair<String, StringValues> query in request.Query)
+            {                
+                if (query.Key == "$select")
+                {
+                    odataSelectColumns = query.Value.ToString().Split(',').ToList();
+                }
+            }
+
+
             List<string> selectString = new List<string>();
             if (route.Columns.Any())
             {
-                foreach (ColumnConfiguration column in route.Columns)
+                if (odataSelectColumns.Count > 0)
                 {
-                    selectString.Add(column.ColumnName);
+                    foreach (string odataSelectColumn in odataSelectColumns)
+                    {
+                        if (route.Columns.Find(cc => cc.ColumnName == odataSelectColumn) != null)
+                        {
+                            selectString.Add(odataSelectColumn);
+                        }
+                        else
+                        {
+                            throw new Exception("The OData $SELECT column '" + odataSelectColumn + "' is not a configured property for route '" + route.Name + "'.");
+                        }
+                    }
                 }
+                else
+                {
+                    foreach (ColumnConfiguration column in route.Columns)
+                    {
+                        selectString.Add(column.ColumnName);
+                    }
+                }                    
             }
             else
             {
-                selectString.Add("*");
+                if (odataSelectColumns.Count > 0)
+                {
+                    selectString = odataSelectColumns;
+                }
+                else
+                {
+                    selectString.Add("*");
+                }
             }
 
             sqlQuery = sqlQuery.Replace(COLUMN_NAMES_SYMBOL, String.Join(",", selectString));
@@ -61,9 +98,9 @@ namespace Qupid.Services
             return sqlQuery;
         }
 
-        public static string GetStringReplacedQuery(RouteConfiguration route, ActionConfiguration action, object id, string json = null)
+        public static string GetStringReplacedQuery(HttpRequest request, RouteConfiguration route, ActionConfiguration action, object id, string json = null)
         {
-            string sqlQuery = GetStringReplacedQuery(route, action, json);
+            string sqlQuery = GetStringReplacedQuery(request, route, action, json);
 
             sqlQuery = sqlQuery.Replace(ID_SYMBOL, id.ToString());
 

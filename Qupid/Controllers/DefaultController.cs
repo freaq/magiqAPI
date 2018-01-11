@@ -19,7 +19,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(Request, route, action);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -54,7 +54,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(Request, route, action, id);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -91,7 +91,7 @@ namespace Qupid.Controllers
                     json = streamReader.ReadToEnd();
                 }
 
-                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, json);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(Request, route, action, json);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -125,7 +125,7 @@ namespace Qupid.Controllers
                     json = streamReader.ReadToEnd();
                 }
 
-                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id, json);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(Request, route, action, id, json);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
@@ -153,7 +153,7 @@ namespace Qupid.Controllers
 
             if (route.Enabled && action.Enabled)
             {
-                string sqlQuery = ControllerService.GetStringReplacedQuery(route, action, id);
+                string sqlQuery = ControllerService.GetStringReplacedQuery(Request, route, action, id);
 
                 SqlServerService sqlServerService = new SqlServerService(apiConfiguration.ConnectionString, route);
 
