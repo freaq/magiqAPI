@@ -4,6 +4,7 @@ using System.Data;
 using DbExtensions;
 using Qupid.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace Qupid.Services
 {
@@ -31,33 +32,75 @@ namespace Qupid.Services
                 {
                     using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
                     {
-                        // if route columns are configured
-                        // then apply potential column mapping from database to api property
-                        // else load the query results using the table column names
-                        if (Route.Columns.Any())
-                        {
-                            foreach (ColumnConfiguration column in Route.Columns)
-                            {
-                                resultSetDataTable.Columns.Add(column.PropertyName);
-                            }
 
-                            while (sqlDataReader.Read())
+                        int indexOfFirstSelect = sqlQuery.ToLower().IndexOf("select");
+                        if (indexOfFirstSelect > -1)
+                        {
+                            string sqlQueryWithoutSelect = sqlQuery.Substring(6).TrimStart();
+
+                            bool allColumns = sqlQueryWithoutSelect.StartsWith("*");
+
+                            if (allColumns)
                             {
-                                DataRow row = resultSetDataTable.NewRow();
-                                foreach (ColumnConfiguration column in Route.Columns)
+                                // if route columns are configured
+                                // then apply potential column mapping from database to api property
+                                // else load the query results using the table column names
+                                if (Route.Columns.Any())
                                 {
-                                    if (ContainsColumn(sqlDataReader, column.ColumnName))
+                                    foreach (ColumnConfiguration column in Route.Columns)
                                     {
-                                        row[column.PropertyName] = sqlDataReader.GetValueOrNull(column.ColumnName);
+                                        resultSetDataTable.Columns.Add(column.PropertyName);
                                     }
+
+                                    MapRouteColumnsToProperties(resultSetDataTable, sqlDataReader);
                                 }
-                                resultSetDataTable.Rows.Add(row);
+                                else
+                                {
+                                    resultSetDataTable.Load(sqlDataReader);
+                                }
+                            }
+                            else
+                            {
+                                int indexOfFirstFrom = sqlQueryWithoutSelect.ToLower().IndexOf("from");
+
+                                if (indexOfFirstFrom > -1)
+                                {
+                                    List<string> querySelectColumns = sqlQueryWithoutSelect.Substring(0, indexOfFirstFrom).Split(',').ToList();
+
+                                    if (Route.Columns.Any())
+                                    {
+                                        foreach (string columnName in querySelectColumns)
+                                        {
+                                            ColumnConfiguration column = Route.Columns.FirstOrDefault(c => c.ColumnName == columnName.Trim());
+                                            if (column != null)
+                                            {
+                                                resultSetDataTable.Columns.Add(column.PropertyName);
+                                            }
+                                        }                                        
+
+                                        MapRouteColumnsToProperties(resultSetDataTable, sqlDataReader);
+                                    }
+                                    else
+                                    {
+                                        resultSetDataTable.Load(sqlDataReader);
+                                    }
+
+                                }
+                                else
+                                {
+                                    // error, there is no from in this query
+                                }
+
                             }
                         }
                         else
                         {
-                            resultSetDataTable.Load(sqlDataReader);
+                            // error, there is no select in this query
                         }
+                        
+
+
+                        
 
                         sqlDataReader.Close();
                     }
@@ -122,6 +165,22 @@ namespace Qupid.Services
             }
 
             return containsColumn;
+        }
+
+        private void MapRouteColumnsToProperties(DataTable resultSetDataTable, SqlDataReader sqlDataReader)
+        {
+            while (sqlDataReader.Read())
+            {
+                DataRow row = resultSetDataTable.NewRow();
+                foreach (ColumnConfiguration column in Route.Columns)
+                {
+                    if (ContainsColumn(sqlDataReader, column.ColumnName))
+                    {
+                        row[column.PropertyName] = sqlDataReader.GetValueOrNull(column.ColumnName);
+                    }
+                }
+                resultSetDataTable.Rows.Add(row);
+            }
         }
 
         //public DataTable GetColumnSchema(string columnName)

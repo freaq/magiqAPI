@@ -19,7 +19,7 @@
     "Qupid": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/DimEmployee?$select=firstName,lastName",
+      "launchUrl": "api/DimEmployee?$select=FirstName,LastName",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
