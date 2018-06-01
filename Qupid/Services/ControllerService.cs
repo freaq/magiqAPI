@@ -40,12 +40,17 @@ namespace Qupid.Services
 
             // extract OData query information
             List<string> odataSelectColumns = new List<string>();
+            //string odataTopValue = null;
             foreach (KeyValuePair<String, StringValues> query in request.Query)
             {                
-                if (query.Key == "$select")
+                if (query.Key.ToLower() == "$select")
                 {
                     odataSelectColumns = query.Value.ToString().Split(',').ToList();
                 }
+                //else if (query.Key.ToLower() == "$top")
+                //{
+                //    odataTopValue = query.Value.ToString();
+                //}
             }
 
 
@@ -85,8 +90,14 @@ namespace Qupid.Services
                     selectString.Add("*");
                 }
             }
-
+            
             sqlQuery = sqlQuery.Replace(COLUMN_NAMES_SYMBOL, String.Join(",", selectString));
+
+            //if (odataTopValue != null)
+            //{
+            //    int indexOfFirstSelect = sqlQuery.ToLower().IndexOf("select");
+            //    sqlQuery = sqlQuery.Insert(indexOfFirstSelect + 6, " TOP " + odataTopValue);
+            //}
 
             sqlQuery = sqlQuery.Replace(PRIMARY_KEY_COLUMN_SYMBOL, route.PrimaryKeyColumn);
 
