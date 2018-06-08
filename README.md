@@ -12,6 +12,7 @@
 ## Getting Started
 
 - Download the zip folder.
+	- (work in progress)
 - At the top of `Configuration/api.json`, configure the database connection string.
 ```shell
 "connectionString": "Server=MY_SQLSERVER_PATH;Database=MY_DATABASE_NAME;Integrated Security=true;",
